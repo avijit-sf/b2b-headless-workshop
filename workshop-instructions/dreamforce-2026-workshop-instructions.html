@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dreamforce 2026 — Deploy a B2B Commerce Headless React Storefront with Agentforce Vibes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', 'Salesforce Sans', -apple-system, sans-serif; color: #032D60; line-height: 1.6; background: #fff; }
+
+  /* === COVER PAGE === */
+  .cover { width: 100%; min-height: 100vh; background: linear-gradient(135deg, #032D60 0%, #0176D3 50%, #00A1E0 100%); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 40px; page-break-after: always; }
+  .cover-badge { display: inline-block; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 24px; padding: 8px 24px; font-size: 13px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 32px; }
+  .cover h1 { font-size: 42px; font-weight: 800; line-height: 1.15; max-width: 800px; margin-bottom: 20px; }
+  .cover h2 { font-size: 20px; font-weight: 400; opacity: 0.85; max-width: 600px; margin-bottom: 40px; }
+  .cover-meta { font-size: 14px; opacity: 0.7; }
+  .cover-logo { width: 120px; margin-bottom: 40px; }
+
+  /* === PAGE LAYOUT === */
+  .page { width: 100%; min-height: 100vh; padding: 48px 56px; page-break-after: always; position: relative; }
+  .page-white { background: #ffffff; }
+  .page-blue { background: #F0F8FF; }
+  .page-number { position: absolute; bottom: 24px; right: 56px; font-size: 12px; color: #9CA3AF; font-weight: 500; }
+  .page-footer { position: absolute; bottom: 24px; left: 56px; font-size: 11px; color: #9CA3AF; }
+
+  /* === SECTION DIVIDER === */
+  .divider { width: 100%; min-height: 100vh; background: linear-gradient(135deg, #0176D3 0%, #00A1E0 100%); color: white; display: flex; flex-direction: column; justify-content: center; padding: 60px 80px; page-break-after: always; }
+  .divider-step { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; opacity: 0.7; margin-bottom: 16px; }
+  .divider h2 { font-size: 44px; font-weight: 800; line-height: 1.15; margin-bottom: 16px; }
+  .divider p { font-size: 18px; opacity: 0.85; max-width: 600px; }
+
+  /* === STEP CONTENT === */
+  .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 3px solid #00A1E0; }
+  .step-num { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #0176D3; color: white; border-radius: 50%; font-size: 20px; font-weight: 800; flex-shrink: 0; }
+  .step-title { font-size: 28px; font-weight: 700; color: #032D60; }
+
+  /* === CONTENT ELEMENTS === */
+  h3 { font-size: 18px; font-weight: 700; color: #032D60; margin: 24px 0 12px; }
+  p { font-size: 15px; margin-bottom: 14px; color: #1B2559; }
+  ol, ul { padding-left: 24px; margin-bottom: 16px; }
+  li { font-size: 15px; margin-bottom: 8px; color: #1B2559; }
+  .substep { background: #F7F9FC; border-left: 4px solid #0176D3; padding: 16px 20px; border-radius: 0 8px 8px 0; margin: 16px 0; }
+  .substep-num { font-weight: 700; color: #0176D3; margin-right: 4px; }
+
+  /* === CALLOUT BOXES === */
+  .callout { border-radius: 8px; padding: 16px 20px; margin: 20px 0; display: flex; gap: 12px; align-items: flex-start; }
+  .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+  .callout-text { font-size: 14px; line-height: 1.5; }
+  .callout-tip { background: #E8F7FF; border: 1px solid #B3E0F7; }
+  .callout-tip .callout-icon { color: #0176D3; }
+  .callout-warning { background: #FFF3E0; border: 1px solid #FFD180; }
+  .callout-warning .callout-icon { color: #E65100; }
+  .callout-important { background: #FCE4EC; border: 1px solid #F48FB1; }
+  .callout-important .callout-icon { color: #C62828; }
+  .callout-success { background: #E8F5E9; border: 1px solid #A5D6A7; }
+  .callout-success .callout-icon { color: #2E7D32; }
+
+  /* === CODE / PROMPT BOX === */
+  .prompt-box { background: #1E293B; color: #E2E8F0; padding: 20px 24px; border-radius: 8px; font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace; font-size: 14px; line-height: 1.6; margin: 16px 0; position: relative; overflow-x: auto; }
+  .prompt-label { position: absolute; top: 8px; right: 12px; background: #0176D3; color: white; padding: 2px 10px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* === SCREENSHOT === */
+  .screenshot-container { margin: 20px 0; border-radius: 8px; overflow: hidden; border: 1px solid #E5E7EB; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .screenshot-container img { width: 100%; display: block; }
+  .screenshot-caption { background: #F7F9FC; padding: 10px 16px; font-size: 12px; color: #6B7280; font-style: italic; border-top: 1px solid #E5E7EB; }
+
+  /* === PREREQUISITES === */
+  .prereq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+  .prereq-card { background: #F7F9FC; border: 1px solid #E5E7EB; border-radius: 8px; padding: 20px; }
+  .prereq-card h4 { font-size: 15px; font-weight: 700; color: #0176D3; margin-bottom: 8px; }
+  .prereq-card p { font-size: 13px; margin: 0; color: #6B7280; }
+
+  /* === CLOSING === */
+  .closing { width: 100%; min-height: 100vh; background: linear-gradient(135deg, #032D60 0%, #0176D3 60%, #00A1E0 100%); color: white; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 40px; }
+  .closing h2 { font-size: 48px; font-weight: 800; margin-bottom: 24px; }
+  .closing p { font-size: 18px; opacity: 0.85; max-width: 600px; margin-bottom: 16px; }
+  .closing-link { display: inline-block; background: white; color: #0176D3; padding: 14px 32px; border-radius: 8px; font-weight: 700; font-size: 16px; text-decoration: none; margin-top: 24px; }
+
+  /* === NUMBERED INSTRUCTION === */
+  .instruction { display: flex; gap: 16px; margin: 16px 0; align-items: flex-start; }
+  .instruction-num { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: #0176D3; color: white; border-radius: 50%; font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .instruction-text { flex: 1; font-size: 15px; }
+  .instruction-text strong { color: #032D60; }
+
+  /* Arrow indicator for UI paths */
+  .ui-path { font-weight: 600; color: #0176D3; }
+  .arrow { color: #9CA3AF; margin: 0 4px; }
+</style>
+</head>
+<body>
+
+<!-- ==================== COVER PAGE ==================== -->
+<div class="cover">
+  <div class="cover-badge">Hands-On Workshop</div>
+  <h1>Deploy a B2B Commerce Headless React Storefront with Agentforce Vibes</h1>
+  <h2>Build and deploy a modern React-powered headless storefront using AI-assisted development — right from your Salesforce org.</h2>
+  <div class="cover-meta">Dreamforce 2026 &nbsp;|&nbsp; Hands-On Workshop</div>
+</div>
+
+<!-- ==================== PREREQUISITES ==================== -->
+<div class="page page-white">
+  <div class="step-header">
+    <div class="step-num" style="background: #032D60;">&#9733;</div>
+    <div class="step-title">Before You Begin</div>
+  </div>
+
+  <p>Make sure you have the following ready before starting the workshop.</p>
+
+  <div class="prereq-grid">
+    <div class="prereq-card">
+      <h4>Salesforce Org</h4>
+      <p>A Salesforce org with B2B Commerce enabled and Agentforce Vibes available. Your workshop org has been pre-configured.</p>
+    </div>
+    <div class="prereq-card">
+      <h4>Web Browser</h4>
+      <p>Google Chrome or Microsoft Edge (latest version recommended). Safari and Firefox may have limited compatibility.</p>
+    </div>
+    <div class="prereq-card">
+      <h4>GitHub Repository</h4>
+      <p>We'll clone the open-source storefront from:<br><strong style="word-break: break-all;">github.com/trailheadapps/commerce-b2b-headless</strong></p>
+    </div>
+    <div class="prereq-card">
+      <h4>Time Required</h4>
+      <p>Approximately <strong>30–45 minutes</strong> to complete all steps. The AI agent handles most of the heavy lifting!</p>
+    </div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Tip:</strong> Agentforce Vibes is now built right into your Salesforce org — no setup or installation needed. Just open it from the Setup Gear Menu and start building.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">2</div>
+</div>
+
+<!-- ==================== STEP 1 DIVIDER ==================== -->
+<div class="divider">
+  <div class="divider-step">Step 1</div>
+  <h2>Access Agentforce Vibes</h2>
+  <p>Launch the Agentforce Vibes IDE directly from your Salesforce org — no installation or setup required.</p>
+</div>
+
+<!-- ==================== STEP 1 CONTENT ==================== -->
+<div class="page page-white">
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div class="step-title">Access Agentforce Vibes</div>
+  </div>
+
+  <p>Agentforce Vibes is now native to your Salesforce org. You can launch it directly from the Setup Gear Menu.</p>
+
+  <div class="instruction">
+    <div class="instruction-num">1</div>
+    <div class="instruction-text">Log into your Salesforce org. You'll land on the Lightning home page.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">2</div>
+    <div class="instruction-text">Click the <strong>Setup Gear icon</strong> (⚙️) in the top-right corner of the navigation bar.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">3</div>
+    <div class="instruction-text">From the dropdown menu, click <strong class="ui-path">Agentforce Vibes</strong>. This opens the IDE in a new tab.</div>
+  </div>
+
+  <div class="screenshot-container">
+    <img src="https://assets.meshmesh.io/tenants/org_01KDY098Y468ZK9Q6DFDZXJBG6/task-assets/58f66120-8d19-4777-8eef-70385ba36d14/5236fa5b-73bf-41b8-8d5a-fe342b3a2320.png" alt="Setup gear menu open showing Agentforce Vibes option">
+    <div class="screenshot-caption">The Setup Gear Menu showing the "Agentforce Vibes" option — click it to launch the IDE.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">4</div>
+    <div class="instruction-text">When prompted with <strong>"Do you trust the authors of the files in this folder?"</strong>, click <strong class="ui-path">Yes, I trust the authors</strong> to enable all features.</div>
+  </div>
+
+  <div class="screenshot-container">
+    <img src="https://assets.meshmesh.io/tenants/org_01KDY098Y468ZK9Q6DFDZXJBG6/task-assets/58f66120-8d19-4777-8eef-70385ba36d14/ff8accd9-8de1-4c84-a382-8d35c0d91fe1.png" alt="Agentforce Vibes IDE launching with trust dialog">
+    <div class="screenshot-caption">Click "Yes, I trust the authors" to enable all IDE features.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Tip:</strong> If you don't see "Agentforce Vibes" in the gear menu, navigate to <span class="ui-path">Setup</span> <span class="arrow">&rarr;</span> <span class="ui-path">Development</span> <span class="arrow">&rarr;</span> <span class="ui-path">Agentforce Vibes IDE</span> to verify it's enabled.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">4</div>
+</div>
+
+<!-- ==================== STEP 2 DIVIDER ==================== -->
+<div class="divider">
+  <div class="divider-step">Step 2</div>
+  <h2>Reposition the Chat Panel</h2>
+  <p>Move the Agentforce Vibes chat to the right side for a better side-by-side workflow.</p>
+</div>
+
+<!-- ==================== STEP 2 CONTENT ==================== -->
+<div class="page page-blue">
+  <div class="step-header">
+    <div class="step-num">2</div>
+    <div class="step-title">Move Chat to the Right-Side Panel</div>
+  </div>
+
+  <p>For the best workflow, we recommend moving the Agentforce Vibes chat panel to the right side of the IDE so you can see both the file explorer and the chat simultaneously.</p>
+
+  <div class="instruction">
+    <div class="instruction-num">1</div>
+    <div class="instruction-text">In the left sidebar, locate the <strong>Agentforce Vibes</strong> icon (it looks like a robot head — 🤖). Click it to open the chat panel.</div>
+  </div>
+
+  <div class="screenshot-container">
+    <img src="https://assets.meshmesh.io/tenants/org_01KDY098Y468ZK9Q6DFDZXJBG6/task-assets/58f66120-8d19-4777-8eef-70385ba36d14/02cfae88-28b8-442a-a2ad-74a8f737dd85.png" alt="Agentforce Vibes chat panel in left sidebar">
+    <div class="screenshot-caption">The Agentforce Vibes chat icon in the left sidebar — click it to open the chat panel.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">2</div>
+    <div class="instruction-text">Right-click the <strong>"AGENTFORCE VIBES"</strong> header text at the top of the chat panel.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">3</div>
+    <div class="instruction-text">Select <strong class="ui-path">Move Views to Secondary Side Bar</strong> from the context menu.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">4</div>
+    <div class="instruction-text">The chat panel now appears on the <strong>right side</strong> of the IDE, giving you a side-by-side view of the file explorer (left) and chat (right).</div>
+  </div>
+
+  <div class="screenshot-container">
+    <img src="https://assets.meshmesh.io/tenants/org_01KDY098Y468ZK9Q6DFDZXJBG6/task-assets/58f66120-8d19-4777-8eef-70385ba36d14/9628a117-0d6f-4e4f-82b9-6e63f010dc88.png" alt="Secondary side bar open on the right for chat panel">
+    <div class="screenshot-caption">The secondary side bar on the right — drag or move the Agentforce Vibes chat here for a side-by-side layout.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Tip:</strong> You can also use the keyboard shortcut <strong>Ctrl+Alt+B</strong> (or <strong>Cmd+Alt+B</strong> on Mac) to toggle the secondary side bar on and off.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">6</div>
+</div>
+
+<!-- ==================== STEP 3 DIVIDER ==================== -->
+<div class="divider">
+  <div class="divider-step">Step 3</div>
+  <h2>Clone the Repository</h2>
+  <p>Use the Agentforce Vibes chat to clone the B2B Commerce headless storefront repo from GitHub.</p>
+</div>
+
+<!-- ==================== STEP 3 CONTENT ==================== -->
+<div class="page page-white">
+  <div class="step-header">
+    <div class="step-num">3</div>
+    <div class="step-title">Clone the Repository</div>
+  </div>
+
+  <p>Now we'll use the Agentforce Vibes chat to clone the open-source B2B Commerce headless storefront repository.</p>
+
+  <div class="instruction">
+    <div class="instruction-num">1</div>
+    <div class="instruction-text">Click into the <strong>Agentforce Vibes chat input</strong> field (at the bottom of the chat panel).</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">2</div>
+    <div class="instruction-text">Type (or copy-paste) the following prompt:</div>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-label">Prompt</div>
+    Clone https://github.com/trailheadapps/commerce-b2b-headless at /home/codebuilder/
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">3</div>
+    <div class="instruction-text">Press <strong>Enter</strong> (or click the send button) to submit the prompt.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">4</div>
+    <div class="instruction-text">Wait for the agent to clone the repository. You'll see progress messages in the chat as the repo is downloaded.</div>
+  </div>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Tip:</strong> The cloning process typically takes 30–60 seconds depending on network speed. The agent will confirm when it's complete.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">8</div>
+</div>
+
+<!-- ==================== STEP 4 DIVIDER ==================== -->
+<div class="divider">
+  <div class="divider-step">Step 4</div>
+  <h2>Change the Project Folder</h2>
+  <p>Switch the active workspace to the newly cloned commerce-b2b-headless project.</p>
+</div>
+
+<!-- ==================== STEP 4 CONTENT ==================== -->
+<div class="page page-blue">
+  <div class="step-header">
+    <div class="step-num">4</div>
+    <div class="step-title">Change the Project Folder</div>
+  </div>
+
+  <p>After cloning, you need to switch the IDE workspace to the new <strong>commerce-b2b-headless</strong> project folder.</p>
+
+  <div class="instruction">
+    <div class="instruction-num">1</div>
+    <div class="instruction-text">Look at the top of the IDE window — you'll see the current folder name (e.g., <strong>"dx-project"</strong>) displayed in the title bar.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">2</div>
+    <div class="instruction-text">Click <strong class="ui-path">File</strong> <span class="arrow">&rarr;</span> <strong class="ui-path">Open Folder...</strong> from the top menu bar (or press <strong>Ctrl+K, Ctrl+O</strong>).</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">3</div>
+    <div class="instruction-text">In the folder picker, navigate to: <strong>/home/codebuilder/commerce-b2b-headless</strong></div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">4</div>
+    <div class="instruction-text">Click <strong class="ui-path">OK</strong> to open the folder. The IDE will reload with the storefront project.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">5</div>
+    <div class="instruction-text">If prompted to trust the folder authors again, click <strong class="ui-path">Yes, I trust the authors</strong>.</div>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <div class="callout-text"><strong>Important:</strong> Make sure you are in the <strong>commerce-b2b-headless</strong> folder before proceeding to the next step. The file explorer on the left should show folders like <code>force-app</code>, <code>scripts</code>, and files like <code>sfdx-project.json</code>.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">10</div>
+</div>
+
+<!-- ==================== STEP 5 DIVIDER ==================== -->
+<div class="divider">
+  <div class="divider-step">Step 5</div>
+  <h2>Add the Deployment Skill</h2>
+  <p>Install the pre-built deployment skill so the agent knows how to configure, build, and deploy the storefront.</p>
+</div>
+
+<!-- ==================== STEP 5 CONTENT ==================== -->
+<div class="page page-white">
+  <div class="step-header">
+    <div class="step-num">5</div>
+    <div class="step-title">Create the Skills Folder &amp; Add the Skill</div>
+  </div>
+
+  <p>The Agentforce Vibes agent uses <strong>skills</strong> — pre-built instruction sets that teach the agent how to perform specific tasks. We need to add the deployment skill to our workspace.</p>
+
+  <h3>Create the skills directory</h3>
+
+  <div class="instruction">
+    <div class="instruction-num">1</div>
+    <div class="instruction-text">In the file explorer, right-click in the root of the project and select <strong class="ui-path">New Folder</strong>.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">2</div>
+    <div class="instruction-text">Name it <strong>.afv</strong> (with the leading dot). Inside it, create another folder called <strong>skills</strong>.</div>
+  </div>
+
+  <p>Your folder structure should now include: <code>.afv/skills/</code></p>
+
+  <h3>Copy the deployment skill</h3>
+
+  <div class="instruction">
+    <div class="instruction-num">3</div>
+    <div class="instruction-text">Copy the <strong>commerce-b2b-headless-setup-deploy/</strong> folder (provided by your workshop instructor) into the <code>.afv/skills/</code> directory.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">4</div>
+    <div class="instruction-text">If the skill doesn't appear immediately, <strong>reload the window</strong>: press <strong>Ctrl+Shift+P</strong> (or <strong>Cmd+Shift+P</strong> on Mac), type <strong>"Reload Window"</strong>, and select it.</div>
+  </div>
+
+  <h3>Enable the skill</h3>
+
+  <div class="instruction">
+    <div class="instruction-num">5</div>
+    <div class="instruction-text">Open the Agentforce Vibes chat panel and click the <strong class="ui-path">Toolkit</strong> button (or gear icon).</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">6</div>
+    <div class="instruction-text">Navigate to <strong class="ui-path">Skills</strong> and toggle <strong>ON</strong> the <strong>commerce-b2b-headless-setup-deploy</strong> skill.</div>
+  </div>
+
+  <div class="callout callout-important">
+    <div class="callout-icon">&#10071;</div>
+    <div class="callout-text"><strong>Do NOT use "+ Add Skill" for this one.</strong> That UI creates a single SKILL.md file and will miss the <code>references/deploy-commands.md</code> file that the skill needs. You must manually copy the entire folder as described above.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">12</div>
+</div>
+
+<!-- ==================== STEP 6 DIVIDER ==================== -->
+<div class="divider">
+  <div class="divider-step">Step 6</div>
+  <h2>Run the Deployment</h2>
+  <p>Tell the agent to deploy the storefront — it handles configuration, building, and deployment automatically.</p>
+</div>
+
+<!-- ==================== STEP 6 CONTENT ==================== -->
+<div class="page page-blue">
+  <div class="step-header">
+    <div class="step-num">6</div>
+    <div class="step-title">Run the Deployment Prompt</div>
+  </div>
+
+  <p>Now comes the exciting part — let the AI agent deploy the entire storefront for you!</p>
+
+  <div class="instruction">
+    <div class="instruction-num">1</div>
+    <div class="instruction-text">Click into the <strong>Agentforce Vibes chat input</strong> field.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">2</div>
+    <div class="instruction-text">Type (or copy-paste) the following prompt:</div>
+  </div>
+
+  <div class="prompt-box">
+    <div class="prompt-label">Prompt</div>
+    Use commerce-b2b-headless-setup-deploy skill to deploy B2B Commerce headless storefront
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">3</div>
+    <div class="instruction-text">Press <strong>Enter</strong> to submit. The agent will begin the multi-step deployment process.</div>
+  </div>
+
+  <p>The agent will automatically:</p>
+  <ul>
+    <li>Configure your org's WebStore ID, Buyer Group, and Permission Set Group</li>
+    <li>Install all Node.js dependencies</li>
+    <li>Build the React application with Vite</li>
+    <li>Deploy Apex classes, UIBundles, and Experience Cloud site metadata</li>
+    <li>Set up guest user permissions</li>
+    <li>Publish the site</li>
+  </ul>
+
+  <div class="callout callout-tip">
+    <div class="callout-icon">&#128161;</div>
+    <div class="callout-text"><strong>Tip:</strong> The full deployment typically takes 5–10 minutes. You can watch the agent's progress in real-time as it runs commands and reports status updates in the chat.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">14</div>
+</div>
+
+<!-- ==================== STEP 7 DIVIDER ==================== -->
+<div class="divider">
+  <div class="divider-step">Step 7</div>
+  <h2>Keep It Running</h2>
+  <p>The agent may pause for confirmation at various stages — just click Run to continue.</p>
+</div>
+
+<!-- ==================== STEP 7 CONTENT ==================== -->
+<div class="page page-white">
+  <div class="step-header">
+    <div class="step-num">7</div>
+    <div class="step-title">Continue to Hit Run</div>
+  </div>
+
+  <p>During the deployment process, the agent may pause at certain stages and ask for your confirmation before proceeding. This is normal behavior.</p>
+
+  <div class="instruction">
+    <div class="instruction-num">1</div>
+    <div class="instruction-text">When the agent pauses, you'll see a <strong class="ui-path">Run</strong> button appear in the chat. Click it to continue.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">2</div>
+    <div class="instruction-text">Repeat this for each pause — the agent may stop 3–5 times during the full deployment.</div>
+  </div>
+
+  <div class="instruction">
+    <div class="instruction-num">3</div>
+    <div class="instruction-text">When the deployment is complete, the agent will confirm with a success message and provide the URL to your new storefront.</div>
+  </div>
+
+  <div class="callout callout-success">
+    <div class="callout-icon">&#10004;&#65039;</div>
+    <div class="callout-text"><strong>Success!</strong> Once the agent reports that deployment is complete, your headless React storefront is live! You can browse products, test the cart, and explore the full B2B commerce experience.</div>
+  </div>
+
+  <div class="callout callout-warning">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <div class="callout-text"><strong>If something fails:</strong> Don't worry! Read the error message in the chat, and ask the agent to try again or troubleshoot the issue. The agent can usually fix most problems on its own.</div>
+  </div>
+
+  <div class="page-footer">Dreamforce 2026 — B2B Commerce Headless Workshop</div>
+  <div class="page-number">16</div>
+</div>
+
+<!-- ==================== CLOSING PAGE ==================== -->
+<div class="closing">
+  <div style="font-size: 64px; margin-bottom: 24px;">&#127881;</div>
+  <h2>Congratulations!</h2>
+  <p>You've successfully deployed a modern B2B Commerce headless React storefront using Agentforce Vibes — powered by AI-assisted development.</p>
+  <p style="margin-top: 24px; font-size: 15px; opacity: 0.7;">Explore the source code and contribute:</p>
+  <a class="closing-link" href="https://github.com/trailheadapps/commerce-b2b-headless" target="_blank">github.com/trailheadapps/commerce-b2b-headless</a>
+  <div style="margin-top: 48px; font-size: 13px; opacity: 0.5;">Dreamforce 2026 &nbsp;|&nbsp; Hands-On Workshop</div>
+</div>
+
+</body>
+</html>
